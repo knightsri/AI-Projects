@@ -1,29 +1,13 @@
-"""
-Project-specific configuration template.
-Copy and modify for each new project.
-"""
+import os
+from dotenv import load_dotenv
 
-# Project metadata
-PROJECT_NAME = "template"
-PROJECT_DESCRIPTION = "Template for new AI projects"
+load_dotenv()
 
-# Default settings
-DEFAULT_GENRE = "fantasy"
-DEFAULT_AUDIENCE = "adults"
-DEFAULT_LANGUAGE = "English"
-
-# Story parameters (adjust as needed)
-MIN_CHARACTER_LIMIT = 200
-MAX_CHARACTER_LIMIT = 20000
-
-# Valid options (customize for your project)
-VALID_GENRES = ['fantasy', 'sci-fi', 'mystery', 'adventure', 'romance', 'thriller', 'historical', 'mythological']
-VALID_AUDIENCES = ['children', 'teens', 'adults']
-VALID_ENDINGS = ['twist', 'cliffhanger', 'simple']
-VALID_KEYS = ['All', 'GROQ', 'GEMINI', 'OPENAI']
-
-# Project-specific prompt templates
-PROMPT_TEMPLATE = """
-Your project-specific prompt template here.
-Use variables like {genre}, {character}, etc.
-"""
+def get_api_key():
+    """
+    Retrieves the Google AI API key from environment variables.
+    """
+    api_key = os.getenv("GOOGLE_API_KEY")
+    if not api_key:
+        raise ValueError("API key not found. Please set the GOOGLE_API_KEY in your .env file.")
+    return api_key
