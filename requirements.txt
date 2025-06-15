@@ -1,0 +1,7 @@
+google-genai
+google-generativeai
+openai==0.27.10
+requests
+python-dotenv
+langcodes
+groq
