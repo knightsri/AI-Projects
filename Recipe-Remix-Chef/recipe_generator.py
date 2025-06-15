@@ -5,18 +5,21 @@ def create_recipe_prompt(ingredients, restrictions, time, skill):
     """
     Creates a detailed and structured prompt for the AI model.
     """
+    dietary_guidance = restrictions if restrictions else "No specific dietary restrictions."
+
     prompt = f"""
-You are an expert chef specializing in innovative vegan and vegetarian (no egg) cuisine.
-Your task is to generate a unique recipe based on the user's constraints.
+You are an expert chef who can create amazing recipes from any set of ingredients.
+Your task is to generate TWO different and unique recipes based on the user's constraints.
 
 **User Constraints:**
 - **Available Ingredients:** {', '.join(ingredients)}
-- **Dietary Needs:** {restrictions} (ensure the recipe is strictly egg-free)
+- **Dietary Needs:** {dietary_guidance}
 - **Cooking Time:** Must be achievable within {time}.
 - **Skill Level:** The recipe should be suitable for a {skill} cook.
 
-**Recipe Output Format:**
-Please structure your response with the following markdown headings:
+Please provide the output as two distinct recipes, separated by a line containing only '---'.
+
+For EACH recipe, please structure your response with the following markdown headings:
 
 ### Recipe Name
 [Provide a creative name for the dish]
@@ -46,4 +49,7 @@ def generate_recipe(prompt):
         response = model.generate_content(prompt)
         return response.text
     except Exception as e:
-        return f"An error occurred: {e}"
+        error_message = str(e)
+        if "API key not valid" in error_message:
+            return "An error occurred: Your API key is not valid. Please check your .env file."
+        return f"An error occurred: {error_message}"

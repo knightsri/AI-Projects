@@ -1,49 +1,66 @@
+# Recipe-Remix-Chef: Complete Project Files
 
-# Recipe-Remix-Chef
+This document contains all the necessary files for the Recipe-Remix-Chef project. You can copy the code from each section and save it as the specified filename.
 
-**Recipe-Remix-Chef** is a fun Python project that acts as your personal kitchen assistant. It's designed to spark culinary creativity by generating unique vegan and vegetarian (egg-free) recipes using the ingredients you already have. Say goodbye to food waste and hello to delicious, home-cooked meals tailored to your tastes and skills. 🧑‍🍳
+---
 
-## 🎯 **Goal**
+## 1. `README.md` (Updated)
 
-The primary goal of this project is to provide users with a smart and intuitive way to create recipes from a given set of ingredients. It aims to make cooking more accessible, reduce food waste, and encourage experimentation in the kitchen.
+This version directs users to the new, simplified setup script.
 
-## ✨ **Core Features**
+```markdown
+# Recipe-Remix-Chef 🍳
 
-* **Ingredient-Based Recipes**: Generates recipes based on a user-provided list of ingredients.
-* **Dietary Customization**: Caters to specific dietary needs, focusing on vegan and vegetarian (no egg) options.
-* **Time & Skill Adaptable**: Suggests recipes that align with your available cooking time and level of expertise.
-* **Smart Substitutions**: Offers intelligent suggestions for missing or alternative ingredients.
-* **User-Friendly Interface**: Simple command-line interaction makes it easy to use.
+**Recipe-Remix-Chef** is your personal kitchen assistant, designed to spark culinary creativity by generating unique recipes—including meat, vegetarian, and vegan options—using the ingredients you already have. Say goodbye to dinner dilemmas and hello to delicious, home-cooked meals tailored to your tastes and skills.
 
-## 🚀 **Getting Started**
+---
 
-### **Prerequisites**
+## 🚀 Getting Started: The Easiest Way
 
-* Python 3.7+
-* Google AI API Key
+This project includes an automatic setup script to make getting started simple, even for non-technical users.
 
-### **Installation**
+### **Step 1: Get the Code**
 
-1.  **Clone the repository:**
+First, get the project files onto your computer.
+
+* **Clone with Git:**
     ```bash
     git clone https://github.com/knightsri/AI-Projects.git
-    cd Recipe-Remix-Chef
     ```
-
-2.  **Install the necessary packages:**
+* **Navigate to the project folder:**
     ```bash
-    pip install -r requirements.txt
+    cd AI-Projects/Recipe-Remix-Chef
+    ```
+    *(Note: The final folder name might be different in your repository)*
+
+### **Step 2: Run the One-Time Setup**
+
+This is the only setup you need to do. This script will create a virtual environment, install the necessary packages, and ask for your API key.
+
+* **On macOS / Linux:**
+    ```bash
+    python3 install.py
+    ```
+* **On Windows:**
+    ```bash
+    python install.py
+    ```
+Follow the on-screen instructions. Once the setup is complete, you're ready to use the app.
+
+### **Step 3: Run the App!**
+
+To run the recipe generator, you need to first activate the environment that the setup script created.
+
+* **On macOS / Linux:**
+    ```bash
+    source venv/bin/activate
+    ```
+* **On Windows:**
+    ```bash
+    .\venv\Scripts\activate
     ```
 
-3.  **Set up your environment variables:**
-    Create a file named `.env` in the root directory and add your Google AI API key as follows:
-    ```
-    GOOGLE_API_KEY="YOUR_API_KEY_HERE"
-    ```
-
-### **How to Use**
-
-Execute the main script from your terminal:
+Once the environment is active (you'll see `(venv)` in your terminal), run the main application:
 
 ```bash
 python main.py
