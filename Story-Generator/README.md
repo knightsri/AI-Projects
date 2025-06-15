@@ -67,7 +67,7 @@ Come up with an appropriate title for the story. If the story is 2 or more pages
 Ensure the output is nicely formatted in markdown ready for easy print and reading or web-publishing.
 ```
 
-Save the story into a file with format: `{key_used}_{2-letter-language}_{sanited-title}.md`, where:
+Save the story into a file with format: `{key_used}_{2-letter-language}_{sanitized-title}.md`, where:
 
 - key_used is either GROQ or GOOLE (not ALL)
 - 2-letter-language code (ISO 639 standard) for the selected language - missing this code, using the {language} as default
