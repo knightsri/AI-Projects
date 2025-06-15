@@ -72,7 +72,7 @@ def validate_ingredients(ingredients, dietary_choice):
     # Scenario 1: User chose a vegetarian diet but provided non-veg ingredients.
     if is_veg_choice and conflicting_items:
         print(Fore.RED + f"\nWarning: You selected a {dietary_choice} diet but provided non-vegetarian ingredients: {', '.join(conflicting_items)}.")
-        retry = get_yes_no("Would you like to re-enter only vegetarian ingredients?")
+        retry = get_yes_no("Would you like to re-enter only vegetarian ingredients? If not, I will go ahead and create recipes with ingredient list provided by you.")
         if retry:
             new_ingredients_input = input("Please enter your vegetarian ingredients: ")
             return [ing.strip() for ing in new_ingredients_input.split(',') if ing.strip()]
@@ -85,7 +85,7 @@ def validate_ingredients(ingredients, dietary_choice):
     elif is_non_veg_choice and not contains_non_veg:
         print(Fore.RED + "\nWarning: You selected a Non-Vegetarian diet but did not provide any non-vegetarian ingredients.")
         print(Fore.CYAN + "Examples of non-veg items: chicken, beef, fish, shrimp, eggs, etc.")
-        retry = get_yes_no("Would you like to add a non-vegetarian ingredient to your list?")
+        retry = get_yes_no("Would you like to add a non-vegetarian ingredient to your list?. If not, I will go ahead and create recipes with ingredient list provided by you.")
         if retry:
             new_ingredients_input = input("Please re-enter your full list of ingredients: ")
             return [ing.strip() for ing in new_ingredients_input.split(',') if ing.strip()]
