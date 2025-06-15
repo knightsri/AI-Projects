@@ -1,21 +1,23 @@
 import google.generativeai as genai
 from config import get_api_key
 
-def create_recipe_prompt(ingredients, restrictions, time, skill):
+def create_recipe_prompt(ingredients, restrictions, time, skill, healthy):
     """
     Creates a detailed and structured prompt for the AI model.
     """
-    dietary_guidance = restrictions if restrictions else "No specific dietary restrictions."
+    health_preference = "The user wants a healthy version of the recipe." if healthy else "The user is open to a standard recipe."
 
     prompt = f"""
-You are an expert chef who can create amazing recipes from any set of ingredients.
+You are an expert chef and nutritionist who creates recipes based *only* on the ingredients provided.
+
 Your task is to generate TWO different and unique recipes based on the user's constraints.
 
 **User Constraints:**
 - **Available Ingredients:** {', '.join(ingredients)}
-- **Dietary Needs:** {dietary_guidance}
+- **Dietary Needs:** {restrictions}
 - **Cooking Time:** Must be achievable within {time}.
 - **Skill Level:** The recipe should be suitable for a {skill} cook.
+- **Health Preference:** {health_preference}
 
 Please provide the output as two distinct recipes, separated by a line containing only '---'.
 
@@ -25,16 +27,19 @@ For EACH recipe, please structure your response with the following markdown head
 [Provide a creative name for the dish]
 
 ### Ingredients
-[List all necessary ingredients with precise quantities. You may include common pantry staples.]
+[List all necessary ingredients with precise quantities. **IMPORTANT: You MUST ONLY use the ingredients from the "Available Ingredients" list provided above.** You are allowed to assume the user also has the following **basic staples ONLY**: salt, pepper, water, and cooking oil. Do NOT include any other ingredients.]
 
 ### Instructions
-[Provide clear, step-by-step instructions from start to finish.]
+[Provide clear, step-by-step instructions.]
 
 ### Cooking Tips
-[Offer 1-2 practical tips relevant to a {skill} cook for this specific recipe.]
+[Offer 1-2 practical tips relevant to a {skill} cook for this recipe.]
 
 ### Substitutions
 [Suggest 1-2 intelligent substitutions for key ingredients.]
+
+### Nutritional Information
+[Provide an estimated breakdown per serving for: Calories, Protein, Carbohydrates, and Fat.]
 """
     return prompt
 

@@ -12,16 +12,20 @@ The project follows a modular structure to ensure clarity and maintainability:
 * **`utils.py`**: A utility module for parsing and formatting the AI's raw output into a readable recipe format.
 * **`requirements.txt`**: Lists all the Python dependencies required for the project.
 * **`.env`**: Stores sensitive information like API keys.
+* **`install.py`**:A dedicated setup script that prepares the project environment. 
 
 ## 🧩 **Core Components**
 
 ### **1. Input Processing (`main.py`)**
 
-The `get_recipe_inputs()` function is responsible for gathering all the necessary details from the user via the command line.
+The user interaction has been significantly improved by replacing free-form text input with a numbered menu system:
 
-* **Ingredients**: Accepts a comma-separated string and converts it into a list of ingredients.
-* **Dietary Needs**: Prompts for dietary restrictions to ensure the recipe is suitable.
-* **Time and Skill**: Takes into account the user's available time and cooking experience to tailor the recipe's complexity.
+get_menu_choice(): A reusable function that displays a list of options (e.g., for dietary needs, time, skill level) and validates that the user enters a valid number from the list.
+
+get_yes_no(): A helper function to handle the "healthy version" preference, cleanly processing "yes" or "no" answers.
+
+This approach minimizes user error, prevents typos, and makes the application faster and more intuitive to use.
+
 
 ### **2. Prompt Engineering (`recipe_generator.py`)**
 
@@ -43,6 +47,16 @@ The `format_recipe()` function takes the raw text response from the AI and trans
 
 * **Parsing Logic**: It parses the AI's output to separate the recipe name, ingredients, instructions, and tips.
 * **Shopping List**: (Optional) This function could be extended to identify ingredients the user doesn't have and compile a shopping list.
+
+### **5. Automated Setup (install.py) **
+
+To simplify the initial setup for non-technical users, a dedicated script handles all prerequisites:
+
+Virtual Environment Creation: It automatically creates a venv folder to isolate the project's dependencies from the user's system Python, preventing conflicts.
+
+Dependency Installation: It uses the subprocess module to call pip from within the newly created virtual environment, ensuring packages from requirements.txt are installed in the correct location.
+
+API Key Configuration: It provides a clear command-line prompt for the user to enter their API key and writes it directly to the .env file, so the user only has to perform this sensitive step once.
 
 ## 🐍 **Python Implementation Snippets**
 
