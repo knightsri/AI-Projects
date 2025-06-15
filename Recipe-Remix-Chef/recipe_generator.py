@@ -1,11 +1,12 @@
 import google.generativeai as genai
 from config import get_api_key
 
-def create_recipe_prompt(ingredients, restrictions, time, skill, healthy):
+def create_recipe_prompt(ingredients, cuisine, restrictions, time, skill, healthy, specialty_info):
     """
     Creates a detailed and structured prompt for the AI model.
     """
     health_preference = "The user wants a healthy version of the recipe." if healthy else "The user is open to a standard recipe."
+    cuisine_preference = f"The user prefers {cuisine} cuisine." if cuisine != "Any" else "The user is open to any cuisine."
 
     prompt = f"""
 You are an expert chef and nutritionist who creates recipes based *only* on the ingredients provided.
@@ -14,14 +15,16 @@ Your task is to generate TWO different and unique recipes based on the user's co
 
 **User Constraints:**
 - **Available Ingredients:** {', '.join(ingredients)}
+- **Cuisine Preference:** {cuisine_preference}
 - **Dietary Needs:** {restrictions}
 - **Cooking Time:** Must be achievable within {time}.
 - **Skill Level:** The recipe should be suitable for a {skill} cook.
 - **Health Preference:** {health_preference}
+- **Pantry Notes:** {specialty_info}
 
 Please provide the output as two distinct recipes, separated by a line containing only '---'.
 
-For EACH recipe, please structure your response with the following markdown headings:
+For EACH recipe, please structure your response with the following markdown headings. Do NOT use any other formatting.
 
 ### Recipe Name
 [Provide a creative name for the dish]
@@ -39,7 +42,7 @@ For EACH recipe, please structure your response with the following markdown head
 [Suggest 1-2 intelligent substitutions for key ingredients.]
 
 ### Nutritional Information
-[Provide an estimated breakdown per serving for: Calories, Protein, Carbohydrates, and Fat.]
+[Provide an estimated breakdown per serving for: Calories, Protein, Carbohydrates, and Fat. This section is mandatory.]
 """
     return prompt
 

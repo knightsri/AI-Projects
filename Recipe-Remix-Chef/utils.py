@@ -7,14 +7,13 @@ def format_recipe(ai_response):
     """
     Parses the AI response and formats it with colors for better readability.
     """
-    # This check is important in case the AI fails to generate anything.
     if not ai_response or ai_response.isspace():
-        print("Sorry, I couldn't generate a recipe with those constraints. Please try different ingredients.")
+        print(Fore.RED + "Sorry, I couldn't generate a recipe with those constraints. Please try different ingredients.")
         return
 
-    print("\n" + Fore.CYAN + "="*50)
-    print(Fore.CYAN + "      Your Custom Recipes! 🍳")
-    print(Fore.CYAN + "="*50 + "\n")
+    print("\n" + Fore.CYAN + Style.BRIGHT + "="*50)
+    print(Fore.CYAN + Style.BRIGHT + "      Your Custom Recipes! 🍳")
+    print(Fore.CYAN + Style.BRIGHT + "="*50 + "\n")
 
     if ai_response.startswith("An error occurred"):
         print(Fore.RED + ai_response)
@@ -28,6 +27,7 @@ def format_recipe(ai_response):
         
         print(f"{Fore.MAGENTA}{Style.BRIGHT}--- RECIPE {i+1} ---\n")
 
+        # Use a more robust way to handle sections
         sections = recipe_text.split('### ')
         for section in sections:
             if not section.strip():
@@ -35,10 +35,8 @@ def format_recipe(ai_response):
 
             try:
                 title, content = section.split('\n', 1)
+                print(f"{Fore.YELLOW}{Style.BRIGHT}### {title.strip()}")
+                print(content.strip() + "\n")
             except ValueError:
-                title = section.strip()
-                content = ""
-
-            print(f"{Fore.YELLOW}{Style.BRIGHT}### {title.strip()}")
-            print(content.strip() + "\n")
-
+                # This handles the case where a section might just be a title
+                print(f"{Fore.YELLOW}{Style.BRIGHT}### {section.strip()}\n")

@@ -1,82 +1,50 @@
 # Recipe-Remix-Chef: Implementation Details
 
-This document provides a technical overview of the **Recipe-Remix-Chef** project, detailing its architecture, core components, and the logic behind its functionality.
+This document provides a technical overview of the **Recipe-Remix-Chef** project, detailing its current architecture, core components, and the logic behind its functionality. This version focuses on a robust, intelligent, terminal-based experience.
 
-## 🏛️ **Project Architecture**
+---
+## **🏛️ Project Architecture**
 
-The project follows a modular structure to ensure clarity and maintainability:
+The project's architecture is focused on a smart, interactive command-line workflow.
 
-* **`main.py`**: The entry point of the application. It orchestrates the flow from user input to recipe display.
-* **`config.py`**: Handles the configuration, specifically loading the API key from environment variables.
-* **`recipe_generator.py`**: Contains the logic for interacting with the Google AI model, including prompt creation and response generation.
-* **`utils.py`**: A utility module for parsing and formatting the AI's raw output into a readable recipe format.
-* **`requirements.txt`**: Lists all the Python dependencies required for the project.
-* **`.env`**: Stores sensitive information like API keys.
-* **`install.py`**:A dedicated setup script that prepares the project environment. 
+* **`install.py`**: A dedicated setup script that prepares the project environment. It creates a virtual environment, installs all required packages, and securely prompts for and saves the user's API key.
 
-## 🧩 **Core Components**
+* **`main.py`**: The central orchestrator of the application. It manages the entire user input flow, including the new ingredient validation and cuisine-specific pantry checks. It then triggers recipe generation and sends the result to be formatted in the terminal.
 
-### **1. Input Processing (`main.py`)**
+* **`recipe_generator.py`**: This module is responsible for communicating with the Google AI text model. It constructs a highly detailed prompt that now includes context about the user's available spices and herbs.
 
-The user interaction has been significantly improved by replacing free-form text input with a numbered menu system:
+* **`utils.py`**: This utility module is responsible for formatting the text-only recipe output with colors for display in the terminal.
 
-get_menu_choice(): A reusable function that displays a list of options (e.g., for dietary needs, time, skill level) and validates that the user enters a valid number from the list.
+* **`config.py`**, **`requirements.txt`**, **`.env`**: Standard configuration and dependency files. `requests` is no longer a dependency.
 
-get_yes_no(): A helper function to handle the "healthy version" preference, cleanly processing "yes" or "no" answers.
+---
+## **🧩 Core Components**
 
-This approach minimizes user error, prevents typos, and makes the application faster and more intuitive to use.
+### **1. Intelligent User Input (`main.py`)**
 
+The user interaction has been significantly enhanced to be more intelligent and prevent logical errors.
 
-### **2. Prompt Engineering (`recipe_generator.py`)**
+* **Symmetrical Ingredient Validation**: The `validate_ingredients` function now performs robust checks for both vegetarian and non-vegetarian selections.
+    * If a user selects **Vegetarian/Vegan** but provides non-veg items, it warns them and allows them to correct the list.
+    * If a user selects **Non-Vegetarian** but provides only vegetarian items, it displays examples of non-veg ingredients and prompts the user to add one, ensuring the request is logical.
 
-The `create_recipe_prompt()` function is the heart of the recipe generation process. It crafts a detailed and structured prompt for the AI model.
+* **Cuisine-Specific Pantry Check**: After a cuisine is selected, a `check_specialty_ingredients` function is called. This function uses a predefined map to ask the user if they have common herbs or spices for that cuisine (e.g., "Do you have common Italian herbs like oregano, basil, and rosemary?"). This "yes" or "no" answer is then passed to the AI to generate a more accurate recipe.
 
-* **Constraint-Based Strategy**: The prompt explicitly outlines the user's ingredients, dietary constraints, time limits, and skill level.
-* **Structured Output Request**: It instructs the AI to provide the output in a specific format, including a recipe name, an ingredients list with quantities, step-by-step instructions, and cooking tips. This makes the response predictable and easy to parse.
+* **Expanded Choices & Streamlined Input**: The number of cuisine choices has been expanded to 10. All yes/no prompts now accept a single `y` or `n` for faster interaction. All prompts are color-coded for clarity.
 
-### **3. AI Model Interaction (`recipe_generator.py`)**
+### **2. Dynamic Prompt Engineering (`recipe_generator.py`)**
 
-The `generate_recipe()` function manages the communication with the Google Generative AI model.
+The prompt sent to the AI is now more context-aware and detailed:
 
-* **API Integration**: It sends the engineered prompt to the AI model.
-* **Error Handling**: Includes basic error handling to manage potential issues during the API call.
+* **Pantry Context**: The prompt now includes a new section, "Pantry Notes," which explicitly tells the AI whether the user has the relevant specialty spices for their chosen cuisine. This allows the AI to create a more authentic recipe.
 
-### **4. Output Processing (`utils.py`)**
+* **Strict Ingredient Adherence**: The prompt continues to enforce the rule that the AI can **only** use the ingredients provided by the user, plus a short list of basic staples (salt, pepper, oil, water), preventing unexpected additions.
 
-The `format_recipe()` function takes the raw text response from the AI and transforms it into a structured, user-friendly format.
+* **Nutritional Information Request**: The prompt mandates that the AI return an estimated nutritional breakdown for each recipe.
 
-* **Parsing Logic**: It parses the AI's output to separate the recipe name, ingredients, instructions, and tips.
-* **Shopping List**: (Optional) This function could be extended to identify ingredients the user doesn't have and compile a shopping list.
+### **3. Terminal-First Output (`utils.py`)**
 
-### **5. Automated Setup (install.py) **
+The focus is on providing a clean and readable terminal output:
 
-To simplify the initial setup for non-technical users, a dedicated script handles all prerequisites:
-
-Virtual Environment Creation: It automatically creates a venv folder to isolate the project's dependencies from the user's system Python, preventing conflicts.
-
-Dependency Installation: It uses the subprocess module to call pip from within the newly created virtual environment, ensuring packages from requirements.txt are installed in the correct location.
-
-API Key Configuration: It provides a clear command-line prompt for the user to enter their API key and writes it directly to the .env file, so the user only has to perform this sensitive step once.
-
-## 🐍 **Python Implementation Snippets**
-
-Here are some key functions that illustrate the project's logic:
-
-**Prompt Creation (`recipe_generator.py`)**
-```python
-def create_recipe_prompt(ingredients, restrictions, time, skill):
-    prompt = f"""
-Create a creative and delicious recipe with the following constraints:
-- **Primary Ingredients:** {', '.join(ingredients)}
-- **Dietary Restrictions:** {restrictions} (strictly no egg)
-- **Max Cooking Time:** {time}
-- **Skill Level:** {skill}
-
-Please provide the output with the following sections:
-1.  **Recipe Name**
-2.  **Ingredients List** (including quantities)
-3.  **Step-by-Step Instructions**
-4.  **Cooking Tips** for a {skill} cook.
-5.  **Substitutions** for missing ingredients.
-"""
-    return prompt
+* The `format_recipe` function in `utils.py` parses the AI's response, which contains two recipes separated by `---`.
+* It uses the `colorama` library to print each section with distinct colors (e.g., magenta headers, yellow section titles), making the final output easy to read and visually organized.

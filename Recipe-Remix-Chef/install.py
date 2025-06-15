@@ -38,16 +38,13 @@ def prompt_for_api_key():
     print("\nConfiguring API Key...")
     env_file = '.env'
     
-    # Check if a valid key already exists
     if os.path.exists(env_file):
         with open(env_file, 'r') as f:
             for line in f:
-                # Check for a line that starts with the key and has a value
                 if line.strip().startswith('GOOGLE_API_KEY=') and len(line.strip()) > 18:
                     print("Existing API key found in .env file. Setup will use this key.")
                     return True
 
-    # If no valid key was found, prompt the user for a new one
     api_key = input("Please paste your Google AI API key here and press Enter: ").strip()
     
     if not api_key:
@@ -87,3 +84,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
