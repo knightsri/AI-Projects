@@ -1,5 +1,17 @@
 import os
 import sys
+from pathlib import Path
+from dotenv import load_dotenv, find_dotenv
+
+
+# Add parent directory to path for gai_lib import
+sys.path.insert(0, str(Path(__file__).parent.parent))
+import gai_lib
+
+# The .env is one level up from main.py
+dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+load_dotenv(dotenv_path)
+
 
 try:
     from dotenv import load_dotenv
